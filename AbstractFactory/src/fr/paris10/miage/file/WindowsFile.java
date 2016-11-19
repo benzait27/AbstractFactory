@@ -1,95 +1,92 @@
 package fr.paris10.miage.file;
 
-import fr.paris10.miage.file.AbstractFile.OpenMode;
+public abstract class WindowsFile implements File {
 
-public abstract class WindowsFile implements AbstractFile{
- 
-	//private static UserRegistry registry = new UserRegistry();
-    private static int nextId = 0;
+	private static UserRegistry registry = new UserRegistry();
+	private static int nextId = 0;
 
-    private int id;
-    private String name;
-    //private UserRegistry.User user;
-    private OpenMode mode;
-    private boolean open;
+	private int id;
+	private String name;
+	private UserRegistry.User user;
+	private OpenMode mode;
+	private boolean open;
 
-    public WindowsFile(String name, String username) {
-        this.id = nextId++;
-        this.name = name;
-        this.mode = null;
-        this.open = false;
-        //this.user = registry.getAndCreateIfNeeded(username);
-    }
+	public WindowsFile(String name, String username) {
+		this.id = nextId++;
+		this.name = name;
+		this.mode = null;
+		this.open = false;
+		this.user = registry.getAndCreateIfNeeded(username);
+	}
 
-    @Override
-    public String toString() {
-		return null;
-       // return String.format("%s:%s %s", id, user, name);
-    }
+	@Override
+	public String toString() {
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+		return String.format("%s:%s %s", id, user, name);
+	}
 
-        WindowsFile that = (WindowsFile) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
-        return id == that.id;
-    }
+		WindowsFile that = (WindowsFile) o;
 
-    @Override
-    public int hashCode() {
-        return id;
-    }
+		return id == that.id;
+	}
 
-    @Override
-    public int getId() {
-        return id;
-    }
+	@Override
+	public int hashCode() {
+		return id;
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public int getId() {
+		return id;
+	}
 
-    //@Override
-    //public UserRegistry.User getUser() {
-    //    return user;
-    //}
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public OpenMode getMode() {
-        return mode;
-    }
+	@Override
+	public UserRegistry.User getUser() {
+		return user;
+	}
 
-    @Override
-    public boolean open(OpenMode mode) {
-        if (!open) {
-            this.open = true;
-            this.mode = mode;
-            return true;
-        } else {
-            return false;
-        }
-    }
+	@Override
+	public OpenMode getMode() {
+		return mode;
+	}
 
-    @Override
-    public boolean close() {
-        if (open) {
-            this.open = false;
-            this.mode = null;
-            return true;
-        } else {
-            return false;
-        }
-    }
+	@Override
+	public boolean open(OpenMode mode) {
+		if (!open) {
+			this.open = true;
+			this.mode = mode;
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    @Override
-    public void rename(String name) {
-        this.name = name;
-    }
+	@Override
+	public boolean close() {
+		if (open) {
+			this.open = false;
+			this.mode = null;
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-	
+	@Override
+	public void rename(String name) {
+		this.name = name;
+	}
+
 }
-
-

@@ -1,59 +1,68 @@
 package fr.paris10.miage.file;
 
-public class DirectoryL extends LunixFile{
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-	@Override
-	int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+final class DirectoryL extends LunixFile {
+
+	private Map<Integer, LunixFile> contents;
+
+	public DirectoryL(String name, String username) {
+		super(name, username);
+		this.contents = new HashMap<>();
+	}
+
+	private LunixFile add(LunixFile f) {
+		return contents.put(f.getId(), f);
+	}
+
+	private LunixFile remove(LunixFile f) {
+		return contents.remove(f.getId());
+	}
+
+	public LunixFile getById(Integer fileId) {
+		return contents.get(fileId);
+	}
+
+	public LunixFile getByName(String fileName) {
+		return contents.values().stream().filter(f -> f.getName().equals(fileName)).findAny().orElse(null);
 	}
 
 	@Override
-	String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return String.format("(d)%s [%s]", super.toString(),
+				contents.values().stream().map(f -> f.toString()).collect(Collectors.joining("\n")));
 	}
 
 	@Override
-	OpenMode getMode() {
-		// TODO Auto-generated method stub
-		return null;
+	public String read() {
+		if (getMode() == OpenMode.READ) {
+			return contents.values().stream().map(f -> f.toString()).collect(Collectors.joining("\n"));
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	boolean open(OpenMode mode) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean write(String content) {
+		if (getMode() == OpenMode.WRITE) {
+			contents.clear();
+			LunixFile file = new OrdinaryFileL(content, getUser().getUid());
+			add(file);
+			return true;
+		} else if (getMode() == OpenMode.APPEND) {
+			LunixFile file = new OrdinaryFileL(content, getUser().getUid());
+			add(file);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
-	boolean close() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	void rename(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	String read() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	boolean write(String content) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	int size() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int size() {
+		return contents.size();
 	}
 
 }
