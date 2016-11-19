@@ -2,59 +2,45 @@ package fr.paris10.miage.file;
 
 final  class OrdinaryFileW extends WindowsFile{
 
-	@Override
-	int getId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	private StringBuffer contents;
 
-	@Override
-	String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public OrdinaryFileW(String name, String username) {
+        super(name, username);
+        this.contents = new StringBuffer();
+    }
 
-	@Override
-	OpenMode getMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String toString() {
+        return "(f)" + super.toString();
+    }
 
-	@Override
-	boolean open(OpenMode mode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public String read() {
+        if (getMode() == OpenMode.READ) {
+            return contents.toString();
+        } else {
+            return null;
+        }
+    }
 
-	@Override
-	boolean close() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean write(String content) {
+        if (getMode() == OpenMode.WRITE) {
+            this.contents = new StringBuffer(content);
+            return true;
+        } else if (getMode() == OpenMode.APPEND) {
+            this.contents.append(content);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	void rename(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	String read() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	boolean write(String content) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int size() {
+        return contents.length();
+    }
+	
 
 	 
 
