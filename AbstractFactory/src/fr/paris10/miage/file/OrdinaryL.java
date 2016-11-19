@@ -1,6 +1,6 @@
 package fr.paris10.miage.file;
 
-final class Directory extends WindowsFile{
+public class OrdinaryL extends LunixFile{
 
 	@Override
 	int getId() {
