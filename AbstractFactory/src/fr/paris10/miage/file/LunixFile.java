@@ -1,32 +1,91 @@
 package fr.paris10.miage.file;
 
-import fr.paris10.miage.file.WindowsFile.OpenMode;
 
-public abstract class LunixFile extends AbstractFile{
-	 public enum OpenMode {
-	        READ(), WRITE(), APPEND();
+public abstract class LunixFile implements AbstractFile{
+	 
+	//private static UserRegistry registry = new UserRegistry();
+    private static int nextId = 0;
 
-	        private OpenMode() {
-	        }
-	    }
+    private int id;
+    private String name;
+    //private UserRegistry.User user;
+    private OpenMode mode;
+    private boolean open;
 
-	 abstract int  getId();
+    public LunixFile(String name, String username) {
+        this.id = nextId++;
+        this.name = name;
+        this.mode = null;
+        this.open = false;
+        //this.user = registry.getAndCreateIfNeeded(username);
+    }
 
-	 abstract  String getName();
+    @Override
+    public String toString() {
+		return null;
+       // return String.format("%s:%s %s", id, user, name);
+    }
 
-	 //abstract  UserRegistry.User getUser();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	 abstract   OpenMode getMode();
+        LunixFile that = (LunixFile) o;
 
-	 abstract   boolean open(OpenMode mode);
+        return id == that.id;
+    }
 
-	 abstract   boolean close();
+    @Override
+    public int hashCode() {
+        return id;
+    }
 
-	 abstract   void rename(String name);
+    @Override
+    public int getId() {
+        return id;
+    }
 
-	 abstract  String read();
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	 abstract  boolean write(String content);
+    //@Override
+    //public UserRegistry.User getUser() {
+    //    return user;
+    //}
 
-	 abstract  int size();
+    @Override
+    public OpenMode getMode() {
+        return mode;
+    }
+
+    @Override
+    public boolean open(OpenMode mode) {
+        if (!open) {
+            this.open = true;
+            this.mode = mode;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean close() {
+        if (open) {
+            this.open = false;
+            this.mode = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void rename(String name) {
+        this.name = name;
+    }
+
 }
